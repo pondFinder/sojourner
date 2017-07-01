@@ -76,6 +76,22 @@ app.post('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '/../index.html'));
 });
 
+// routes for user interests
+app.get('/interests', (req, res) => {
+  var username = req.sessions.username;
+  var password = req.sessions.password;
+
+  db.User.findOne({
+    where: {
+      username: username,
+      password: password
+    }
+  })
+  .then((user) => {
+    res.json(user.dataValues);
+  });
+});
+
 app.post('/user', function(req, res) {
   // request for a user profile page
   res.render('/user');
