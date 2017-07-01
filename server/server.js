@@ -6,6 +6,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var db = require('./db');
+var request = require('request');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -17,6 +18,25 @@ app.get('/', function(req, res) {
   } else {
     res.sendFile(path.resolve(__dirname + '/../index.html'));
   }
+});
+
+app.get('/interests', (req, res) => {
+  console.log(req.session);
+  var username = req.session.username;
+
+  console.log('inside interests');
+  db.User.findOne({
+    where: {
+      username: username
+    }
+  })
+  .then((user) => {
+    console.log('>>>>>', user.dataValues);
+    res.send(user.dataValues);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get('/signup', (req, res) => {
@@ -71,7 +91,10 @@ app.post('/signup', (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      home_city: req.body.home_city
+      home_city: req.body.home_city,
+      interest_1: req.body.interest_1,
+      interest_2: req.body.interest_2,
+      interest_3: req.body.interest_3
     });
     res.sendFile(path.join(__dirname, '/../index.html'));
 });
@@ -115,6 +138,50 @@ io.on('connection', (socket) => {
 
 });
 
+//Google Maps need this route because of CORS
+app.post('/places', (req, res) => {
+
+  console.log(req.body.address);
+  request
+  .get(req.body.address)
+  .on('response', (google_res) => {
+    var google_resData = '';
+
+    google_res.on('data', (data) => {
+      google_resData += data;
+    });
+
+    google_res.on('end', () => {
+      res.send(google_resData);
+    })
+    
+  })
+  .on('error', (err) => {
+    console.log(err);
+  });
+});
+
+app.post('/map', (req, res) => {
+
+  console.log(req.body.address);
+  request
+  .get(req.body.address)
+  .on('response', (google_res) => {
+    var google_resData = '';
+
+    google_res.on('data', (data) => {
+      google_resData += data;
+    });
+
+    google_res.on('end', () => {
+      res.send(google_resData);
+    })
+    
+  })
+  .on('error', (err) => {
+    console.log(err);
+  });
+});
 
 http.listen(process.env.PORT || 3000, function(){
   console.log("listening on process.environment.port or listening on 3000");

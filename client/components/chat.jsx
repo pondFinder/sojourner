@@ -86,7 +86,6 @@ class Chat extends React.Component{
             <input type="submit" value="Enter" />
         </form>
         <br />
-        <h1>Hello from chat</h1>
         <br />
         </div>
       );
