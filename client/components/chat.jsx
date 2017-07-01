@@ -14,7 +14,6 @@ class Chat extends React.Component{
     }
     
     this.state.socket.on('msg', (msg) => {
-      console.log('msg recieved: ', msg);
       this.handleChat(msg);
     }); 
 
@@ -24,11 +23,10 @@ class Chat extends React.Component{
   getUsername() {
     var that = this.setState.bind(this);
 
-    axios.get('/username')
+    axios.get('/info')
     .then(function (result) {
-      console.log(result);
       that({
-        username: result.data
+        username: result.data.username
       });
     }, function failure(result) {
       console.log('in the failure section', result.error);
@@ -38,7 +36,6 @@ class Chat extends React.Component{
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state.msg);
     this.state.socket.emit('msg', this.state.msg, this.state.username);
     this.setState({
       msg: ''

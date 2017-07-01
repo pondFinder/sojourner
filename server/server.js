@@ -57,8 +57,11 @@ app.get('/logout', (req, res) => {
 // - user profile page (enable PUT/POST requests for updates?)
 // - login page (GET/POST)
 // - signup page (GET/POST)
-app.get('/username', (req, res) => {
-  res.send(req.session.username);
+app.get('/info', (req, res) => {
+  res.send({
+    username: req.session.username,
+    home_city: req.session.home_city
+  });
 });
 
 app.post('/login', (req, res) => {
@@ -76,6 +79,7 @@ app.post('/login', (req, res) => {
       req.session.regenerate(() => {
         req.session.user_id = user.dataValues.id;
         req.session.username = username;
+        req.session.home_city = user.dataValues.home_city;
         res.sendFile(path.join(__dirname, '/../index.html'));
       });
     } else {
@@ -91,11 +95,17 @@ app.post('/signup', (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      home_city: req.body.home_city,
+      home_city: req.body.home_town,
       interest_1: req.body.interest_1,
       interest_2: req.body.interest_2,
       interest_3: req.body.interest_3
     });
+
+    req.session.regenerate(() => {
+      req.session.username = req.body.username;
+      req.session.home_city = req.body.home_town;
+    });
+
     res.sendFile(path.join(__dirname, '/../index.html'));
 });
 
@@ -141,7 +151,6 @@ io.on('connection', (socket) => {
 //Google Maps need this route because of CORS
 app.post('/places', (req, res) => {
 
-  console.log(req.body.address);
   request
   .get(req.body.address)
   .on('response', (google_res) => {

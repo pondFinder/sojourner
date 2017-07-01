@@ -12,24 +12,42 @@ class Map extends React.Component {
     this.roads = 'https://roads.googleapis.com/v1/snapToRoads?';
     this.places = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
 
+    this.infowindow = new google.maps.InfoWindow();
     //State Variables
     this.state = {
       destination: '',
-      lat: 29.9559601,
-      long: -90.1205441,
+      lat: 0,
+      long: 0,
       formatted_address: '',
       places: [],
       zoom: 12,
       map: null,
-      infowindow: new google.maps.InfoWindow(),
       interest1: null,
       interest2: null,
-      interest3: null
+      interest3: null,
+      name: ''
     };
-    this.renderMapOnToPage();
-    this.getInterests();
+
+    this.getLocation();
   }
-  
+  getLocation(){
+    var that = this.setState.bind(this);
+    var contextHandleMap = this.handleMapSubmit.bind(this);
+
+    axios.get('/info')
+    .then(function (result) {
+      that({
+        destination: result.data.home_city,
+        name: result.data.username
+      });
+
+      contextHandleMap();
+
+    }, function failure(result) {
+      console.log('in the failure section', result.error);
+    });
+  }
+
   handleMapChange(event) {
     this.setState({
       destination: event.target.value
@@ -50,13 +68,13 @@ class Map extends React.Component {
 
     axios.get('/interests')
     .then((res) => {
-    
+
       this.setState({
         interest1: res.data.interest_1,
         interest2: res.data.interest_2,
         interest3: res.data.interest_3
       });
-      
+
       var place = 'location=' + this.state.lat + ',' + this.state.long + '&radius=5000';
       this.getMarkers(this.places + place + '&keyword=' + this.state.interest1 + this.KEY, this.state.interest1);
       this.getMarkers(this.places + place + '&keyword=' + this.state.interest2 + this.KEY, this.state.interest2);
@@ -86,7 +104,7 @@ class Map extends React.Component {
             long: item.geometry.location.lng,
             keyword: keyword
           });
-        
+
         this.createMarker(item);
       }
         this.setState({
@@ -99,15 +117,26 @@ class Map extends React.Component {
   }
 
   createMarker(place) {
+
     var placeLoc = place.geometry.location;
+
     var marker = new google.maps.Marker({
       map: this.state.map,
       position: place.geometry.location
     });
+    var that = this.infowindow;
+    var thatmap = this.state.map;
+
+    google.maps.event.addListener(marker, 'click', function(event) {
+      that.setContent(place.name);
+      that.open(thatmap, this);
+    });
   }
 
   handleMapSubmit(event) {
-    event.preventDefault();
+    if(event){
+      event.preventDefault();
+    }
 
     var destination = 'address=' + this.state.destination;
     var that = this.setState.bind(this);
@@ -129,18 +158,17 @@ class Map extends React.Component {
     this.setState({
       destination: ''
     });
-    
+
   }
 
   render () {
     return (
       <div>
-        <h3>{this.state.formatted_address}</h3>
-        <h3>Lat:{this.state.lat} Lng:{this.state.long}</h3>
+        <h3>{this.state.formatted_address} | Hello, {this.state.name}</h3>
         <br />
         <ul>
-          { 
-            this.state.places.map((place, index) => 
+          {
+            this.state.places.map((place, index) =>
             <li key={index}>
                 { place.keyword + ': ' + place.name + ' (' + place.rating + ')' + '\n' }
             </li>)
