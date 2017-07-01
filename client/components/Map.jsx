@@ -1,117 +1,161 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { withGoogleMap, GoogleMap, InfoWindow, Marker } from 'react-google-maps';
+import axios from 'axios';
 
 class Map extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //Google API Variables
+    this.KEY = '&key=AIzaSyCsdfp6u8miRapt5-lAIiUzyznhRM_xKss';
+    this.geoAddress = 'https://maps.googleapis.com/maps/api/geocode/json?';
+    this.roads = 'https://roads.googleapis.com/v1/snapToRoads?';
+    this.places = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
+
+    //State Variables
+    this.state = {
+      destination: '',
+      lat: 29.9559601,
+      long: -90.1205441,
+      formatted_address: '',
+      places: [],
+      zoom: 12,
+      map: null,
+      infowindow: new google.maps.InfoWindow(),
+      interest1: null,
+      interest2: null,
+      interest3: null
+    };
+    this.renderMapOnToPage();
+    this.getInterests();
+  }
+  
+  handleMapChange(event) {
+    this.setState({
+      destination: event.target.value
+    });
+  }
+
+  renderMapOnToPage() {
+    this.state.map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: this.state.lat, lng: this.state.long},
+      zoom: this.state.zoom
+    });
+  }
+
+  getInterests() {
+    this.setState({
+      places: []
+    });
+
+    axios.get('/interests')
+    .then((res) => {
+    
+      this.setState({
+        interest1: res.data.interest_1,
+        interest2: res.data.interest_2,
+        interest3: res.data.interest_3
+      });
+      
+      var place = 'location=' + this.state.lat + ',' + this.state.long + '&radius=5000';
+      this.getMarkers(this.places + place + '&keyword=' + this.state.interest1 + this.KEY, this.state.interest1);
+      this.getMarkers(this.places + place + '&keyword=' + this.state.interest2 + this.KEY, this.state.interest2);
+      this.getMarkers(this.places + place + '&keyword=' + this.state.interest3 + this.KEY, this.state.interest3);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  getMarkers(address, keyword) {
+    axios.post('/places', {
+      address: address
+    })
+    .then((res) => {
+      var innerResults = this.state.places;
+
+      for(var i=0; i<5; i++) {
+
+        var item = res.data.results[i];
+
+
+        innerResults.push({
+            name: item.name,
+            rating: item.rating,
+            lat: item.geometry.location.lat,
+            long: item.geometry.location.lng,
+            keyword: keyword
+          });
+        
+        this.createMarker(item);
+      }
+        this.setState({
+          places: innerResults
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  createMarker(place) {
+    var placeLoc = place.geometry.location;
+    var marker = new google.maps.Marker({
+      map: this.state.map,
+      position: place.geometry.location
+    });
+  }
+
+  handleMapSubmit(event) {
+    event.preventDefault();
+
+    var destination = 'address=' + this.state.destination;
+    var that = this.setState.bind(this);
+
+    axios.get(this.geoAddress+destination+this.KEY)
+    .then((res) => {
+      that({
+        lat: res.data.results[0].geometry.location.lat,
+        long: res.data.results[0].geometry.location.lng,
+        formatted_address: res.data.results[0].formatted_address
+      })
+      this.renderMapOnToPage();
+      this.getInterests();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+    this.setState({
+      destination: ''
+    });
+    
+  }
+
   render () {
     return (
-      <GoogleMap
-        defaultZoom={14}
-        defaultCenter={{ lat: 29.9559601, lng: -90.1205441 }}
-      >
-      </GoogleMap>
+      <div>
+        <h3>{this.state.formatted_address}</h3>
+        <h3>Lat:{this.state.lat} Lng:{this.state.long}</h3>
+        <br />
+        <ul>
+          { 
+            this.state.places.map((place, index) => 
+            <li key={index}>
+                { place.keyword + ': ' + place.name + ' (' + place.rating + ')' + '\n' }
+            </li>)
+          }
+        </ul>
+       <form onSubmit={this.handleMapSubmit.bind(this)} action="POST">
+        <label>
+          Location:
+        <input type="text" name="msg" size="50" value={this.state.destination} onChange={this.handleMapChange.bind(this)} />
+        </label>
+        <input type="submit" value="Enter" />
+      </form>
+      </div>
     );
   }
 }
 
-export default withGoogleMap(Map);
-
-// const Map = withGoogleMap(props => {
-//   return (
-//     <GoogleMap
-//       ref={props.onMapLoad}
-//       defaultZoom={14}
-//       defaultCenter={{ lat: 29.9559601, lng: -90.1205441 }}
-//     >
-//     </GoogleMap>
-//   )
-// })
-
-
-// export default class Map extends React.Component {
-//   constructor() {
-//     super();
-//     this.loadJS = this.loadJS.bind(this);
-//   }
-//
-//   componentDidMount() {
-//     window.initMap = this.initMap;
-//     loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyA0ANsEfBZ3VzlZWzUrdpa24aGMbheBICA&libraries=places&callback=initMap');
-//     // // this.loadMap();
-//
-//     new google.maps.Map(this.refs.map, {
-//       center: {
-//         lat: 29.9559601,
-//         lng: -90.1205441
-//       },
-//       zoom: 14
-//     });
-//   }
-//
-//   // componentDidUpdate(prevProps, prevState) {
-//   //   if (prevProps.google !== this.props.google) {
-//   //     this.loadMap();
-//   //   }
-//   // }
-//
-//   // initMap() {
-//   //   map = new google.maps.Map(this.refs.map.getDOMNode('map'), mapConfig);
-//   // }
-//
-//   loadJS(src) {
-//
-//     // const api = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA0ANsEfBZ3VzlZWzUrdpa24aGMbheBICA&libraries=places&callback=initMap';
-//     const ref = window.document.getElementsByTagName("script")[0];
-//     const script = window.document.createElement("script");
-//     script.src = src;
-//     script.async = true;
-//
-//     let zoom = 14;
-//     let lat = 37.774929;
-//     let lng = -122.419416;
-//     const center = new maps.LatLng(lat, lng);
-//     const mapConfig = Object.assign({}, {
-//       center: center,
-//       zoom: zoom
-//     });
-//     ref.parentNode.insertBefore(script, ref);
-//   }
-//
-//   // loadMap() {
-//   //   // if google api is available
-//   //   if (this.props && this.props.google) {
-//   //     const {google} = this.props;
-//   //     const maps = google.maps;
-//   //
-//   //     const mapRef = this.refs.map;
-//   //     const node = ReactDOM.findDOMNode(mapRef);
-//   //     // reference to the actual DOM element, not the virtual
-//   //     // DOM
-//   //
-//   //     let zoom = 14;
-//   //     let lat = 37.774929;
-//   //     let lng = -122.419416;
-//   //     const center = new maps.LatLng(lat, lng);
-//   //     const mapConfig = Object.assign({}, {
-//   //       center: center,
-//   //       zoom: zoom
-//   //     });
-//   //     this.map = new maps.Map(node, mapConfig);
-//   //     // instantiate a new map instance at the DOM element mapRef
-//   //     // and center and zoom of mapConfig
-//   //   }
-//   // }
-//
-//   render() {
-//     const style = {
-//       width: '100vw',
-//       height: '100vh'
-//     };
-//
-//     return (
-//       <div ref='map' style={style}>
-//         Loading map...
-//       </div>
-//     );
-//   }
-// }
+export default Map;
