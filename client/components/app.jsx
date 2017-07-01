@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Map from './map.jsx';
+import Map from './Map.jsx';
 // if you want to import a .jsx file, you must refer to it using the
 // './' and '.jsx' extension
 
