@@ -66,23 +66,20 @@ class Chat extends React.Component{
   render(){
     return (
         <div>
-        <ul>
-            { 
-            this.state.chat.map((msg, index) => 
-            <li key={index}>
-                { msg + '\n' }
-            </li>)
-            }
-        </ul>
         <br />
-        <form onSubmit={this.handleSubmit.bind(this)} action="POST">
-            <label>
-            msg:
+        <div id='ctext'>Chat: </div>
+        <form id='chatbox' onSubmit={this.handleSubmit.bind(this)} action="POST">
             <input type="text" name="msg" size="50" value={this.state.msg} onChange={this.handleChange.bind(this)} />
-            </label>
             <input type="submit" value="Enter" />
         </form>
-        <br />
+        <ul id="chat">
+          { 
+          this.state.chat.map((msg, index) => 
+          <li className='message' key={index}>
+              { msg + '\n' }
+          </li>)
+          }
+        </ul>
         <br />
         </div>
       );

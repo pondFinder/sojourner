@@ -24,8 +24,7 @@ class Map extends React.Component {
       map: null,
       interest1: null,
       interest2: null,
-      interest3: null,
-      name: ''
+      interest3: null
     };
 
     this.getLocation();
@@ -55,7 +54,7 @@ class Map extends React.Component {
   }
 
   renderMapOnToPage() {
-    this.state.map = new google.maps.Map(document.getElementById('map'), {
+    this.state.map = new google.maps.Map(this.refs.map, {
       center: {lat: this.state.lat, lng: this.state.long},
       zoom: this.state.zoom
     });
@@ -164,16 +163,8 @@ class Map extends React.Component {
   render () {
     return (
       <div>
-        <h3>{this.state.formatted_address} | Hello, {this.state.name}</h3>
+        <h3>{this.state.formatted_address}</h3>
         <br />
-        <ul>
-          {
-            this.state.places.map((place, index) =>
-            <li key={index}>
-                { place.keyword + ': ' + place.name + ' (' + place.rating + ')' + '\n' }
-            </li>)
-          }
-        </ul>
        <form onSubmit={this.handleMapSubmit.bind(this)} action="POST">
         <label>
           Location:
@@ -181,6 +172,17 @@ class Map extends React.Component {
         </label>
         <input type="submit" value="Enter" />
       </form>
+      <div ref='map' id='map' >
+      </div>  
+      <ul id='places'>
+        <h3>Adventure Points</h3>
+          {
+            this.state.places.map((place, index) =>
+            <li key={index}>
+              <strong>{ place.keyword }</strong> { ': ' + place.name + ' (' + place.rating + ')' + '\n' }
+            </li>)
+          }
+      </ul>
       </div>
     );
   }

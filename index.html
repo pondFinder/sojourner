@@ -9,23 +9,68 @@
      * element that contains the map. */
     #map {
       height: 500px;
-      width: 80%;
-      margin: auto;
+      width: 75%;
+      display: inline-block;
     }
+
+    #places {
+     width: 20%;
+     text-align: left;
+     display: inline-block;
+     list-style: none;
+     vertical-align: top;
+     
+    }
+
     /* Optional: Makes the sample page fill the window. */
     body {
       height: 100%;
       margin: 5%;
       padding: 0;
+      background-color: #efefef;
     }
-  </style>
 
+    a:link {
+      color: #b4dbc0;
+    }
+    
+    #hello {
+      font-size: 3em;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #chat {
+      background-color: #b4dbc0;
+      list-style: none;
+      clear: both;
+      margin-top: 1em;
+      border-radius: .5em;
+    }
+
+    #chatbox {
+      padding-left: .5em;
+      vertical-align: top;
+    }
+
+    #ctext {
+      padding-left: .5em;
+      font-weight: bold;
+      font-size: 1.5em;
+      color: #373737;
+    }
+
+    .message {
+      padding: .1em;
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
   </head>
-  <body>
-    <h1>SOJOURNER</h1>
+  <body style="background-color: #88bbd6; width: 90%; margin-left: 5%;">
     <div id="app"></div>
     <div id='chat'></div>
-    <div id="map"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 import Map from './Map.jsx';
 // if you want to import a .jsx file, you must refer to it using the
 // './' and '.jsx' extension
@@ -11,23 +12,36 @@ class App extends React.Component{
   constructor(){
     super();
     this.state = {
-      test: 'string to be rendered for test purposes in this.state constructor'
+      name: ''
     }
+
+    this.getName();
   }
+    getName() {
+      var that = this.setState.bind(this);
+
+      axios.get('/info')
+        .then(function (result) {
+          that({
+            name: result.data.username
+          });
+        }, function failure(result) {
+          console.log('in the failure section', result.error);
+        });
+  }
+
   render(){
+    var floatright = {
+      float: 'right',
+      'font-size': '1.5em',
+      'color': '#b4dbc0',
+      'font-weight': 'bold'
+    };
+
     return (
         <div>
-          <nav className="topbar">
-            {/*<span class="user-name">{{$ctrl.user}}</span>*/}
-            <a href="/logout" className="logout">Logout</a>
-          </nav>
-          {/*<img src='http://www.pondclean.com/wp-content/uploads/2016/09/POND-1.jpg' />*/}
-          {/*<Basemap />*/}
-        {/* <MapWrapper /> */}
-        <Map
-          containerElement={<div style={{ height: `100%`}} />} 
-          mapElement={<div style={{ height: `100%` }} />}
-        />
+          <h1>SOJOURNER | Hello, {this.state.name}!</h1><a href="/logout" style={floatright}>Logout</a>
+        <Map />
         </div>
       );
   }
