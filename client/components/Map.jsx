@@ -168,14 +168,14 @@ class Map extends React.Component {
        <form onSubmit={this.handleMapSubmit.bind(this)} action="POST">
         <label>
           Location:
-        <input type="text" name="msg" size="50" value={this.state.destination} onChange={this.handleMapChange.bind(this)} />
+        <input type="text" name="msg" size="50" value={this.state.destination} style={{"margin-left": ".5em"}} onChange={this.handleMapChange.bind(this)} />
         </label>
-        <input type="submit" value="Enter" />
+        <input type="submit" value="Enter" style={{"margin-left": ".5em"}}/>
       </form>
       <div ref='map' id='map' >
-      </div>  
+      </div>
       <ul id='places'>
-        <h3>Adventure Points</h3>
+        <h3 style={{"text-align": "center", "margin-top": "0"}}>Adventure Points</h3>
           {
             this.state.places.map((place, index) =>
             <li key={index}>

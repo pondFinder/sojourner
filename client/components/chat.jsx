@@ -12,10 +12,10 @@ class Chat extends React.Component{
         chat: [],
         username: ''
     }
-    
+
     this.state.socket.on('msg', (msg) => {
       this.handleChat(msg);
-    }); 
+    });
 
     this.getUsername();
   }
@@ -49,7 +49,7 @@ class Chat extends React.Component{
     if(newChat.length >= 10) {
       newChat.shift();
     }
-    
+
     newChat.push(msg);
 
     this.setState({
@@ -70,11 +70,11 @@ class Chat extends React.Component{
         <div id='ctext'>Chat: </div>
         <form id='chatbox' onSubmit={this.handleSubmit.bind(this)} action="POST">
             <input type="text" name="msg" size="50" value={this.state.msg} onChange={this.handleChange.bind(this)} />
-            <input type="submit" value="Enter" />
+            <input type="submit" value="Enter" style={{"margin-left": ".5em"}} />
         </form>
         <ul id="chat">
-          { 
-          this.state.chat.map((msg, index) => 
+          {
+          this.state.chat.map((msg, index) =>
           <li className='message' key={index}>
               { msg + '\n' }
           </li>)
