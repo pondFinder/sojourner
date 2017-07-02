@@ -34,7 +34,7 @@ class App extends React.Component{
     var floatright = {
       float: 'right',
       'font-size': '1.5em',
-      'color': '#FF3B3F',
+      'color': '#FCCD04',
       'font-weight': 'bold',
       'margin-right': '1em',
       'margin-top': '1em'
@@ -42,9 +42,9 @@ class App extends React.Component{
 
     return (
         <div>
-          <h1 style={{"color": "#3B8BEB", "font-weight": "bold", "display": "inline-block", "margin-right": ".25em"}}>SOJOURNER</h1>
-          <h1 style={{"color": "#FF3B3F", "display": "inline-block", "margin-right": ".25em"}}>|</h1>
-          <h1 style={{"color": "#3B8BEB", "display": "inline-block"}}>Hello, {this.state.name}!</h1><a href="/logout" style={floatright}>Logout</a>
+          <h1 style={{"color": "#026670", "font-weight": "bold", "display": "inline-block", "margin-right": ".25em"}}>SOJOURNER</h1>
+          <h1 style={{"color": "#FCCD04", "display": "inline-block", "margin-right": ".25em"}}>|</h1>
+          <h1 style={{"color": "#026670", "display": "inline-block"}}>Hello, {this.state.name}!</h1><a href="/logout" style={floatright}>Logout</a>
         <Map />
         </div>
       );
