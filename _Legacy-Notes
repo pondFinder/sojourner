@@ -1,0 +1,55 @@
+index.html
+
+Contains most of the styling for the app.
+Additionally we have read conflicting reports as to whether the google api key which we used here is appropriately placed or needs to remain hidden.
+
+login.html and signup.html
+
+Both pages are still in bare bones HTML format, they both could use proper headers and HTML declarations.
+
+server/db/index.js
+db = new Sequelize....
+
+We renamed our local postgres database to mirror the name of our heroku database as a workaround while troubleshooting database issues. This works and could continue to work for your group.... Regardless you will most likely want to have all of your individual local data bases be set up exactly alike.
+
+
+server/db/index.js
+var user = db.define
+
+A note on user model our database is setup very simply currently each user contains all relevant data to that user, no share tables etc... however our SQL database allows plenty of room for growth.
+
+A note on user interests, we limited ourselves to 3 interests so as not to overload the number of calls to the google api, there is a theorhetical limit to number of calls that we were weary to cross.
+
+Some ideas for expanding Sojourner ---
+
+Database--- add ons
+Ability to route/edit user info and routes.
+Preset/reset Zoom level on user spec.
+Preset/reset Search Radius on user spec.
+Generally extending user prefrences....
+
+Verify unique username on signup so as to not have confusion among users with the same name and overlaping data.
+
+Mappoints - Interaction information and links are minimal at this point but could be expanded.
+
+Homepage---
+Reset on your current user login location/geolocation.
+Or a current location button that zero's in to your location...great for mobile.
+
+Populate current events or bring in additional api's
+
+Chat features-(currently site wide chat)
+Chat should be built off of a friends added feature chatting privately with specific friends.
+Or regionally with other users on relevant maps.
+Filter inapropriate language.
+
+
+Friends - Features-
+Find friends based on interests or location.
+Add friends. Edit friends etc.
+
+
+
+
+HARD MODE!!!!! creating the map as a higher order component.
+
