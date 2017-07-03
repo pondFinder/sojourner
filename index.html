@@ -4,9 +4,11 @@
   <title>SOJOURNER</title>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
+
+  <!-- Styling for the main page and some inherited component views. -->
+  <!-- Most of our styling is here, but check the individual `.html` views  -->
+  <!-- for their own styling. -->
   <style>
-    /* Always set the map height explicitly to define thsize of the div
-     * element that contains the map. */
     #map {
       height: 500px;
       width: 75%;
@@ -23,24 +25,15 @@
      vertical-align: top;
      margin-left: 1em;
      padding: .5em;
- /*    padding-left: .5em;
-     padding-right: .5em;
-     padding-bottom: .5em;*/
      background-color: #EAE7DC;
      border-radius: .5em;
     }
 
-    /* Optional: Makes the sample page fill the window. */
     body {
       height: 100%;
       margin: 5%;
       padding: 0;
-/*      background-color: #A8D0E6;*/
     }
-
-    a:link {
-/*      color: #b4dbc0;
-*/    }
 
     #hello {
       font-size: 3em;
@@ -82,7 +75,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0ANsEfBZ3VzlZWzUrdpa24aGMbheBICA"></script>
+    <!-- Replace {INSERT_YOUR_OWN_API_KEY_!!!} with your own Google Maps API key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={INSERT_YOUR_OWN_API_KEY_!!!}"></script>
     <script src="client/bundle.js"></script>
   </body>
 </html>

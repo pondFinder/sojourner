@@ -30,12 +30,15 @@ class Map extends React.Component {
     this.getLocation();
   }
   getLocation(){
-    var that = this.setState.bind(this);
+    var stateChangeContext = this.setState.bind(this);
+    // ^ binding the context of `this` so stateChangeContext it isn't lost in the
+    // axios promise
     var contextHandleMap = this.handleMapSubmit.bind(this);
-
+    // ^ binding the context of `this` so it isn't lost in the
+    // axios promise
     axios.get('/info')
     .then(function (result) {
-      that({
+      stateChangeContext({
         destination: result.data.home_city,
         name: result.data.username
       });
@@ -55,6 +58,7 @@ class Map extends React.Component {
 
   renderMapOnToPage() {
     this.state.map = new google.maps.Map(this.refs.map, {
+      // ^ create new map using method supplied by Google Maps API
       center: {lat: this.state.lat, lng: this.state.long},
       zoom: this.state.zoom
     });
@@ -124,8 +128,11 @@ class Map extends React.Component {
       position: place.geometry.location
     });
     var that = this.infowindow;
-    var thatmap = this.state.map;
+    // ^ referring to infowindow of Map instance
 
+    var thatmap = this.state.map;
+    // ^ referring to a copy of the current map created by the Google Maps API
+    
     google.maps.event.addListener(marker, 'click', function(event) {
       that.setContent(place.name);
       that.open(thatmap, this);
@@ -138,11 +145,13 @@ class Map extends React.Component {
     }
 
     var destination = 'address=' + this.state.destination;
-    var that = this.setState.bind(this);
+    var stateChangeContext = this.setState.bind(this);
+    // ^ binding the context of `this` so stateChangeContext it isn't lost in the
+    // axios promise
 
     axios.get(this.geoAddress+destination+this.KEY)
     .then((res) => {
-      that({
+      stateChangeContext({
         lat: res.data.results[0].geometry.location.lat,
         long: res.data.results[0].geometry.location.lng,
         formatted_address: res.data.results[0].formatted_address

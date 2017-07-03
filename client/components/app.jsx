@@ -5,8 +5,6 @@ import Map from './Map.jsx';
 // if you want to import a .jsx file, you must refer to it using the
 // './' and '.jsx' extension
 
-// import { Basemap } from './map';
-
 class App extends React.Component{
 
   constructor(){

@@ -130,7 +130,9 @@ app.post('/user', function(req, res) {
   res.render('/user');
 });
 
-app.use(express.static(path.join(__dirname, '../')));//moved from above
+// Placed our express.static below our http requests so that they
+// won't interfere with our http requests.
+app.use(express.static(path.join(__dirname, '../')));
 
 //Socket IO
 io.on('connection', (socket) => {
@@ -148,7 +150,8 @@ io.on('connection', (socket) => {
 
 });
 
-//Google Maps need this route because of CORS
+//Google Maps need this route because of CORS (will recieve
+// CORS error on client side without this route).
 app.post('/places', (req, res) => {
 
   request
@@ -163,7 +166,7 @@ app.post('/places', (req, res) => {
     google_res.on('end', () => {
       res.send(google_resData);
     })
-    
+
   })
   .on('error', (err) => {
     console.log(err);
@@ -185,7 +188,7 @@ app.post('/map', (req, res) => {
     google_res.on('end', () => {
       res.send(google_resData);
     })
-    
+
   })
   .on('error', (err) => {
     console.log(err);

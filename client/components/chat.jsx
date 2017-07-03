@@ -22,6 +22,8 @@ class Chat extends React.Component{
 
   getUsername() {
     var that = this.setState.bind(this);
+    // ^ binding the context of `this` so it isn't lost in the
+    // axios promise
 
     axios.get('/info')
     .then(function (result) {
